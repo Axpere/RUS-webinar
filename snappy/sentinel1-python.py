@@ -158,12 +158,41 @@ output_view(speckle, output_bands, 0.00, 0.21, 0.00, 0.048)
 
 #Create variable of the projection with information
 #SNAP GUI feature --> automatically detets the UTM zone in the terrain correction operator
-#ToDo: Find a way to extract this information automatically
+#ToDo: Find a way to extract this information automatically from xlm file...
 proj = '''PROJCS["UTM Zone 31 / World Geodetic System 1984",
-(xxx)
-AXIS["Northing", NORTH]]'''
+  GEOGCS["World Geodetic System 1984",
+    DATUM["World Geodetic System 1984",
+      SPHEROID["WGS 84", 6378137.0, 298.257223563, AUTHORITY["EPSG", "7030"]],
+      AUTHORITY["EPSG", "6326"]],
+    PRIMEM["Greenwich", 0.0, AUTHORITY["EPSG", "8901"]],
+    UNIT["degree", 0.017453292519943295],
+    AXIS["Geodetic longitude", EAST],
+    AXIS["Geodetic longitude", north]],
+  PROJECTION["Transverse_Mercator"],
+  PARAMETER["central_meridian", 3.0],
+  PARAMETER["latitude_of_origin", 0.0],
+  PARAMETER["scale_factor", 0.9996],
+  PARAMETER["false_easting", 500000.0],
+  PARAMETER["false_northing", 0.0],
+  UNIT["m", 1.0],
+  AXIS["Easting", EAST],
+  AXIS["Northing", NORTH]]'''
 
 #Terrain-Correction Operator - snappy
+parameters = snappy.HashMap()
+parameters.put('demName', 'SRTM 3Sec')
+parameters.put('imgResamplingMethod', 'BILINEAR_INTERPOLATION')
+parameters.put('pixelSpacingInMeter', 10.0)
+parameters.put('mapProjection', proj)
+parameters.put('nodataValueAtSea', False) # do not mask areas without elevation
+parameters.put('saveSelectedSourceBand', True)
+terrain_correction = snappy.GPF.createProduct('Terrain-Correction', parameters, speckle)
+
+#Plot terrain correction (follow VV - VH order)
+output_bands = ['Sigma0_VV', 'Sigma0VH'] # in this step Amplitude bands are lost?
+output_view(terrain_correction, output_bands, 0.00, 0.49, 0.00, 0.04)
+
+#Write
 
 
 
