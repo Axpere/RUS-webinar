@@ -193,6 +193,12 @@ output_bands = ['Sigma0_VV', 'Sigma0VH'] # in this step Amplitude bands are lost
 output_view(terrain_correction, output_bands, 0.00, 0.49, 0.00, 0.04)
 
 #Write
+#write the end file in GeoTIFF format
+#Set output path and name
+outpath_name = '/shared/Training/PY01_Sentinel1Processing_snappy/Processing/snappy/202004418_Orb_Thm_Cal_Spk_Tc'
 
+#Write Operator - snappy
+snappy.ProductIO.writeProduct(terrain_correction, outpath_name, 'GeoTIFF')
+print(colored('Product succesfully saved in: ', 'green'), outpath_name)
 
 
