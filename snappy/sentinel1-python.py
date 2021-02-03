@@ -76,4 +76,21 @@ for i in input_S1_files:                        #extracting metadata from the pr
   width.append(s1_read.getSceneRasterWidth())
   band_names.append(S1_read.getBandNames())
   
-df_s1_read = pd.DataFrame({'Name': name, 'Sensing Mode', 'Product Type': product_type, 'Polarization': polarization, 'Height': height , (xxxx) display(df_s1_read)
+df_s1_read = pd.DataFrame({'Name': name, 'Sensing Mode', 'Product Type': product_type, 'Polarization': polarization, 'Height': height , (xxxx)}) display(df_s1_read) #not completed dictionary
+
+#Display quicklook - First image
+with ZipFile(input_S1_files[0], 'r') as qck_look:
+  qck_look = qck_look.open(name[0] + '.SAFE/preview/quick-look.png') #extracts a specific file inside the zipfile using python zipfile module.
+  img = mpimg.imread(qck_look)
+  plt.figure(figsize = (15,15))
+  plt.title('Quicklook visulization - '+ name[0] + '\n')
+  plt.axis('off')
+  plt.imshow(img);
+  
+  #Subset
+  #Defining the Area Of Interest (AOI), defining pixels coordinates, less processing time.
+  
+  #ur corner
+  x, y, width, height = 12000, 8000, 5500, 5500
+  
+  
