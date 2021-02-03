@@ -76,7 +76,8 @@ for i in input_S1_files:                        #extracting metadata from the pr
   width.append(s1_read.getSceneRasterWidth())
   band_names.append(S1_read.getBandNames())
   
-df_s1_read = pd.DataFrame({'Name': name, 'Sensing Mode', 'Product Type': product_type, 'Polarization': polarization, 'Height': height , (xxxx)}) display(df_s1_read) #not completed dictionary
+df_s1_read = pd.DataFrame({'Name': name, 'Sensing Mode', 'Product Type': product_type, 'Polarization': polarization, 'Height': height , (xxxx)})
+display(df_s1_read) #not completed dictionary, they are not visible in the YT video
 
 #Display quicklook - First image
 with ZipFile(input_S1_files[0], 'r') as qck_look:
@@ -93,4 +94,22 @@ with ZipFile(input_S1_files[0], 'r') as qck_look:
   #ur corner
   x, y, width, height = 12000, 8000, 5500, 5500
   
+  #Subset Operator - snappy
+  parameters = snappy.HashMap()
+  parameters.put('copyMetadata', True)
+  parameters.put('region', "%s,%s,%s,%s" % (x, y, width, height))
+  subset = snappy.GPF.createProduct('Subset', parameters, s1_read) #calls operator of snappy
+  list(subset.getBandNames())
+  
+  #Plot subset (follow VV - VH order)
+  output_bands = ['Amplitude_VV', 'Amplitude_VH']
+  output_view(subset, output_bands, 41, 286, 20, 160) #Try and error values, treshold affect the view output
+  
+  #Apply orbit file
+  parameters = snappy.HashMap()
+  parameters.put('Apply-Orbit-File'. True)
+  apply_orbit = snappy.GPF.createProduct('Apply-Orbit-File', parameters, subset)
+  print(colored('Orbit updated succesfully', 'green'))
+  
+  #Thermal Noise Removal
   
